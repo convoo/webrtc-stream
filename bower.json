@@ -15,7 +15,7 @@
   ],
   "main": "webrtc-stream.html",
   "license": "MIT",
-  "homepage": "https://github.com/convoo/webrtc-stream/",
+  "homepage": "https://convoo.github.io/webrtc-stream/",
   "ignore": [
     "/.*",
     "/test/"

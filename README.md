@@ -1,6 +1,8 @@
 # webrtc-stream
 
-An element providing a starting point for your own reusable Polymer elements.
+An element providing access to a user's getUserMedia stream.
+
+View the demo at https://convoo.github.io/webrtc-stream/
 
 
 ## Dependencies
@@ -15,10 +17,10 @@ Then, go ahead and download the element's dependencies:
     bower install
 
 
-## Playing With Your Element
+## Deoming the Element
 
-If you wish to work on your element in isolation, we recommend that you use
-[Polyserve](https://github.com/PolymerLabs/polyserve) to keep your element's
+If you wish to work on this element locally, you can use
+[Polyserve](https://github.com/PolymerLabs/polyserve) to keep the element's
 bower dependencies in line. You can install it via:
 
     npm install -g polyserve
@@ -27,7 +29,7 @@ And you can run it via:
 
     polyserve
 
-Once running, you can preview your element at
+Once running, you can preview the element at
 `http://localhost:8080/components/webrtc-stream/`, where `webrtc-stream` is the name of the directory containing it.
 
 
@@ -54,8 +56,3 @@ Then, you can run your tests on _all_ of your local browsers via:
 `wct -p` will keep the browsers alive after test runs (refresh to re-run).
 
 `wct test/some-file.html` will test only the files you specify.
-
-
-## Yeoman support
-
-If you'd like to use Yeoman to scaffold your element that's possible. The official [`generator-polymer`](https://github.com/yeoman/generator-polymer) generator has a [`seed`](https://github.com/yeoman/generator-polymer#seed) subgenerator.
