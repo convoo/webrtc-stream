@@ -7,7 +7,7 @@ An element providing access to a user's getUserMedia stream.
 
 Example:
 
-    <webrtc-stream stream="{{userStream}}"></webrtc-stream>
+    <webrtc-stream stream="{{userStream}}" stream-url="{{userStreamUrl}}"></webrtc-stream>
 
 
 @demo demo/index.html
@@ -25,13 +25,21 @@ Example:
 
       properties: {
         /**
-         * `stream` is the blob url to the user's stream. Null if user browser doesn't support getUserMedia or if user rejected access.
+         * `streamUrl` is the blob url to the user's stream. Null if user browser doesn't support getUserMedia or if user rejected access.
+         */
+        streamUrl: {
+          type: String,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * `stream` is the blob of the user's stream. Null if user browser doesn't support getUserMedia or if user rejected access.
          */
         stream: {
           type: String,
           notify: true,
           reflectToAttribute: true
-        },
+        }
       },
 
       // Element Lifecycle
@@ -67,7 +75,8 @@ Example:
             },
             // Positive scenario
             function(stream) {
-              this.stream = window.URL.createObjectURL(stream);
+              this.stream = stream
+              this.streamUrl = window.URL.createObjectURL(stream);
             }.bind(this),
             // Error scenario
             function(error){

@@ -13,11 +13,11 @@
       <template is="dom-bind" id="demo-template">
         
         <p>An example of <code>&lt;webrtc-stream&gt;</code>:</p>
-        <webrtc-stream stream="{{stream}}"></webrtc-stream>
+        <webrtc-stream stream="{{stream}}" stream-url="{{sUrl}}"></webrtc-stream>
         {{stream}}
         
         <p>Here it is shown on a muted autoplayed video element</p>
-        <video src="{{stream}}" autoplay muted></video>
+        <video src="{{sUrl}}" autoplay muted></video>
 
     <script>
 
