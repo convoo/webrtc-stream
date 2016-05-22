@@ -18,9 +18,24 @@
         
         <p>Here it is shown on a muted autoplayed video element</p>
         <video src="{{sUrl}}" autoplay muted></video>
+        
+        <webrtc-stream id="manualStream" stream="{{manualStream}}" stream-url="{{manualSUrl}}" manual></webrtc-stream>
+        
+        <p>This next section uses a manual stream</p>
+        <p>Start the stream by clicking here:<button id="startbtn">Start</button></p>
+        <p>Stop the stream by clicking here:<button id="stopbtn">Stop</button></p>
+        <video src="{{manualSUrl}}" autoplay muted></video>
 
     <script>
 
+      var seedElement = document.querySelector('#manualStream');
+      document.querySelector('#startbtn').addEventListener('click', function() {
+        seedElement.start();
+      });
+      
+      document.querySelector('#stopbtn').addEventListener('click', function() {
+        seedElement.stop();
+      });
     </script>
 
   </body>

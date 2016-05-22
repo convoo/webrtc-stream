@@ -39,6 +39,16 @@ Example:
           type: String,
           notify: true,
           reflectToAttribute: true
+        },
+        /**
+         * `manual` determines whether the stream will automatically be accessed and interacted with. If set to true, you can start 
+         * and stop access using the start and stop functions.
+         */
+        manual: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
         }
       },
 
@@ -60,7 +70,20 @@ Example:
         // This is a good place to perform any work related to your element's
         // visual state or active behavior (measuring sizes, beginning animations,
         // loading resources, etc).
+        if(!this.manual){
+          this._getUserMedia();
+        }
         
+      },
+
+      detached: function() {
+        // The analog to `attached`, `detached` fires when the element has been
+        // removed from a document.
+        //
+        // Use this to clean up anything you did in `attached`.
+      },
+      
+      _getUserMedia: function(){
         function hasGetUserMedia() {
           return !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
         }
@@ -87,13 +110,20 @@ Example:
           console.log('Your browser is not supported, please update to the lastest Chrome or Firefox', error);
         }
       },
-
-      detached: function() {
-        // The analog to `attached`, `detached` fires when the element has been
-        // removed from a document.
-        //
-        // Use this to clean up anything you did in `attached`.
+      /**
+       * Starts the stream when in manual mode or after being stopped
+       */
+      start: function(){
+        this._getUserMedia();
       },
+      
+      /**
+       * Stops the stream from continuing
+       */
+      stop: function(){
+        this.stream = null;
+        this.streamUrl = null;
+      }
 
     });
   </script>
