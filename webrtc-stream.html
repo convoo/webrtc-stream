@@ -49,6 +49,33 @@ Example:
           value: false,
           notify: true,
           reflectToAttribute: true
+        },
+         /**
+         * `video` determines whether the user will be asked to share there video or not
+         */
+        video: {
+          type: Boolean,
+          value: true,
+          notify: true,
+          reflectToAttribute: true
+        },
+         /**
+         * `audio` determines whether the user will be asked to share there audio or not
+         */
+        audio: {
+          type: Boolean,
+          value: true,
+          notify: true,
+          reflectToAttribute: true
+        },
+         /**
+         * `backCamera` determines which camera will used as the source for mobile
+         */
+        backCamera: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          reflectToAttribute: true
         }
       },
 
@@ -88,13 +115,21 @@ Example:
           return !!(navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia);
         }
         
+        if(this.video == true && this.backCamera == false){
+          var videoSettings = {facingMode: "user"}
+        } else if (this.video == true){
+          var videoSettings = true;
+        } else {
+          var videoSettings = false;
+        }
+        
         if (hasGetUserMedia()) {
           navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
           navigator.getUserMedia(
             // Settings
             {
-              audio: true, 
-              video: true
+              audio: this.audio, 
+              video: videoSettings
             },
             // Positive scenario
             function(stream) {
