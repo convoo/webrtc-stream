@@ -105,22 +105,22 @@ Example:
           reflectToAttribute: true
         },
         /**
-         * The active mic device
+         * The active mic device id
          */
         activeMic: {
-          type: Object,
+          type: String,
           notify: true,
-          value: null,
+          value: "default",
           reflectToAttribute: true,
           observer: "_checkManualThenGetUserMedia"
         },
         /**
-         * The active camera device
+         * The active camera device id
          */
         activeCamera: {
-          type: Object,
+          type: String,
           notify: true,
-          value: null,
+          value: "default",
           reflectToAttribute: true,
           observer: "_checkManualThenGetUserMedia"
         }
@@ -191,7 +191,6 @@ Example:
             
             return [mics, speakers, cameras];
           }).then(function(selectors){
-            console.log(this);
             this.mics = selectors[0];
             this.speakers = selectors[1];
             this.cameras = selectors[2];
@@ -211,21 +210,10 @@ Example:
             
             var audioSettings, videoSettings;
             
-            console.log("active mic");
-            console.log(this.activeMic); 
-            if(this.activeMic){
-              console.log(this.activeMic["value"]);  
-            }
-            console.log("active camera");
-            console.log(this.activeCamera);
-            if(this.activeCamera){
-              console.log(this.activeCamera["value"]);  
-            }
-            
-            if(this.audio && this.activeMic != null){
+            if(this.audio && this.activeMic != null && this.activeMic != ""){
               audioSettings = {
                 deviceId: {
-                  exact: this.activeMic.value
+                  exact: this.activeMic
                 }
               };
             } else if(this.audio){
@@ -234,10 +222,10 @@ Example:
               audioSettings = false;
             }
             
-            if(this.video && this.activeCamera != null){
+            if(this.video && this.activeCamera != null && this.activeCamera != ""){
               videoSettings = {
                 deviceId: {
-                  exact: this.activeCamera.value
+                  exact: this.activeCamera
                 }
               };
             } else if(this.video){
@@ -246,16 +234,17 @@ Example:
               videoSettings = false;
             }
             
-            console.log(audioSettings);
-            console.log(videoSettings);
+            var settings = {
+              audio: audioSettings, 
+              video: videoSettings
+            }
+            
+            console.log(settings)
             
             navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
             navigator.getUserMedia(
               // Settings
-              {
-                audio: audioSettings, 
-                video: videoSettings
-              },
+              settings,
               // Positive scenario
               function(stream) {
                 this.stream = stream

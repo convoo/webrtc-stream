@@ -45,7 +45,7 @@
         <select value="{{activeCam::change}}">
           <option value="">Select one</option>
           <template is="dom-repeat" items="{{cameras}}" as="camera">
-            <option value$="{{camera}}">{{camera.label}}</option>
+            <option value$="{{camera.value}}">{{camera.label}}</option>
           </template>
         </select>
         <br>
@@ -53,7 +53,7 @@
         <select value="{{activeMic::change}}">
           <option value="">Select one</option>
           <template is="dom-repeat" items="{{mics}}" as="mic">
-            <option value$="{{mic}}">{{mic.label}}</option>
+            <option value$="{{mic.value}}">{{mic.label}}</option>
           </template>
         </select>
         <br>
