@@ -25,6 +25,26 @@
         <p>Start the stream by clicking here:<button id="startbtn">Start</button></p>
         <p>Stop the stream by clicking here:<button id="stopbtn">Stop</button></p>
         <video src="{{manualSUrl}}" autoplay muted></video>
+        
+        <p>This next section allows you to control what will be available in terms of audio and video</p>
+        
+        <webrtc-stream id="selectiveStream"
+            stream-url="{{selectiveStream}}"
+            audio="{{hasAudio}}"
+            video="{{hasVideo}}"
+            back-camera="{{usingRearCamera}}"
+            manual></webrtc-stream>
+        
+        <label>I want audio!</label><input type="checkbox" checked="{{hasAudio::change}}"><br>
+        <label>I want video!</label><input type="checkbox" checked="{{hasVideo::change}}"><br>
+        <label>I want the rear camera!</label><input type="checkbox" checked="{{usingRearCamera::change}}"><br>
+        
+        <p><strong>Note - it may play your audio so be sure to use headphones so that you don't get an endless screeching echo</strong></p>
+        <p>Start the next stream by clicking here:  
+          <button id="startSelective">Start</button>
+        </p>
+        <p>Stop the stream by clicking here:<button id="stopSelective">Stop</button></p>
+        <video src="{{selectiveStream}}" autoplay></video>
 
     <script>
 
@@ -36,6 +56,16 @@
       document.querySelector('#stopbtn').addEventListener('click', function() {
         seedElement.stop();
       });
+      
+      var selectiveEl = document.querySelector("#selectiveStream");
+      document.querySelector('#startSelective').addEventListener('click', function() {
+        selectiveEl.start();
+      });
+      
+      document.querySelector('#stopSelective').addEventListener('click', function() {
+        selectiveEl.stop();
+      });
+      
     </script>
 
   </body>
