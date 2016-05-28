@@ -207,19 +207,13 @@ Example:
         if(this.audio || this.video){
           
           if (hasGetUserMedia()) {
-            console.log('BANG!');
             var audioSettings, videoSettings;
-            
-            console.log("this.activeMic");
-            console.log(this.activeMic);
-            console.log("this.activeCamera");
-            console.log(this.activeCamera);
             
             if(this.audio && this.activeMic != null && this.activeMic != ""){
               audioSettings = {
-                deviceId: {
-                  exact: this.activeMic
-                }
+                optional: [{
+                  sourceId: this.activeMic
+                }]
               };
             } else if(this.audio){
               audioSettings = true;
@@ -229,9 +223,9 @@ Example:
             
             if(this.video && this.activeCamera != null && this.activeCamera != ""){
               videoSettings = {
-                deviceId: {
-                  exact: this.activeCamera
-                }
+                optional: [{
+                  sourceId: this.activeCamera
+                }]
               };
             } else if(this.video){
               videoSettings = true;
@@ -244,31 +238,14 @@ Example:
               video: videoSettings
             }
             
-            var constraints = {};
-            
-            constraints.video = {
-              optional: [{
-                sourceId: this.activeCamera
-              }]
-            };
-            
-            constraints.audio = {
-                optional: [{
-                    sourceId: this.activeMic
-                }]
-            };
-            
-            console.log(settings)
-            
             navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
             navigator.getUserMedia(
               // Settings
-              constraints,
+              settings,
               
               // Positive scenario
               function(stream) {
                 this.stream = stream;
-                console.log('BOOM!')
                 this.streamUrl = window.URL.createObjectURL(stream);
               }.bind(this),
               // Error scenario
