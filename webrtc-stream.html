@@ -79,6 +79,50 @@ Example:
           notify: true,
           reflectToAttribute: true,
           observer: "_checkManualThenGetUserMedia"
+        },
+        /**
+         * An array of available audioInput devices or mics
+         */
+        mics: {
+          type: Array,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * An array of available audioOutput devices or speakers
+         */
+        speakers: {
+          type: Array,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * An array of available videoInput devices or cameras
+         */
+        cameras: {
+          type: Array,
+          notify: true,
+          reflectToAttribute: true
+        },
+        /**
+         * The active mic device
+         */
+        activeMic: {
+          type: Object,
+          notify: true,
+          value: null,
+          reflectToAttribute: true,
+          observer: "_checkManualThenGetUserMedia"
+        },
+        /**
+         * The active camera device
+         */
+        activeCamera: {
+          type: Object,
+          notify: true,
+          value: null,
+          reflectToAttribute: true,
+          observer: "_checkManualThenGetUserMedia"
         }
       },
 
@@ -100,6 +144,9 @@ Example:
         // This is a good place to perform any work related to your element's
         // visual state or active behavior (measuring sizes, beginning animations,
         // loading resources, etc).
+        
+        this._getUserDevices();
+        
         if(!this.manual){
           this._getUserMedia();
         }
@@ -112,6 +159,44 @@ Example:
         //
         // Use this to clean up anything you did in `attached`.
       },
+      _getUserDevices: function(){
+        navigator.mediaDevices.enumerateDevices()
+          .then(function(deviceInfos) {
+            // Influenced by https://github.com/webrtc/samples/blob/gh-pages/src/content/devices/input-output/js/main.js
+            // Handles being called several times to update labels. Preserve values.
+            
+            var mics = [],
+              speakers = [],
+              cameras = [];
+            
+            for (var i = 0; i !== deviceInfos.length; ++i) {
+              var deviceInfo = deviceInfos[i];
+              var nextDevice = {};
+              nextDevice.value = deviceInfo.deviceId;
+              if (deviceInfo.kind === 'audioinput') {
+                nextDevice.label = deviceInfo.label ||
+                  'microphone ' + (mics.length + 1);
+                mics.push(nextDevice);
+              } else if (deviceInfo.kind === 'audiooutput') {
+                nextDevice.label = deviceInfo.label || 'speaker ' +
+                    (speakers.length + 1);
+                speakers.push(nextDevice);
+              } else if (deviceInfo.kind === 'videoinput') {
+                nextDevice.label = deviceInfo.label || 'camera ' + (cameras.length + 1);
+                cameras.push(nextDevice);
+              } else {
+                console.log('Some other kind of source/device: ', deviceInfo);
+              }
+            }
+            
+            return [mics, speakers, cameras];
+          }).then(function(selectors){
+            console.log(this);
+            this.mics = selectors[0];
+            this.speakers = selectors[1];
+            this.cameras = selectors[2];
+          }.bind(this));
+      },
       
       _getUserMedia: function(){
         
@@ -121,20 +206,54 @@ Example:
         
         
         if(this.audio || this.video){
-          if(this.video && !this.backCamera){
-            var videoSettings = {facingMode: "user"}
-          } else if (this.video){
-            var videoSettings = true;
-          } else {
-            var videoSettings = false;
-          }
           
           if (hasGetUserMedia()) {
+            
+            var audioSettings, videoSettings;
+            
+            console.log("active mic");
+            console.log(this.activeMic); 
+            if(this.activeMic){
+              console.log(this.activeMic["value"]);  
+            }
+            console.log("active camera");
+            console.log(this.activeCamera);
+            if(this.activeCamera){
+              console.log(this.activeCamera["value"]);  
+            }
+            
+            if(this.audio && this.activeMic != null){
+              audioSettings = {
+                deviceId: {
+                  exact: this.activeMic.value
+                }
+              };
+            } else if(this.audio){
+              audioSettings = true;
+            } else {
+              audioSettings = false;
+            }
+            
+            if(this.video && this.activeCamera != null){
+              videoSettings = {
+                deviceId: {
+                  exact: this.activeCamera.value
+                }
+              };
+            } else if(this.video){
+              videoSettings = true;
+            } else {
+              videoSettings = false;
+            }
+            
+            console.log(audioSettings);
+            console.log(videoSettings);
+            
             navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
             navigator.getUserMedia(
               // Settings
               {
-                audio: this.audio, 
+                audio: audioSettings, 
                 video: videoSettings
               },
               // Positive scenario
@@ -173,6 +292,7 @@ Example:
         this.stream = null;
         this.streamUrl = null;
       }
+      
 
     });
   </script>

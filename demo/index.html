@@ -14,7 +14,8 @@
         
         <p>An example of <code>&lt;webrtc-stream&gt;</code>:</p>
         <webrtc-stream stream="{{stream}}" stream-url="{{sUrl}}"></webrtc-stream>
-        {{stream}}
+        Stream object: {{stream}} <br>
+        Stream URL: {{sUrl}}
         
         <p>Here it is shown on a muted autoplayed video element</p>
         <video src="{{sUrl}}" autoplay muted></video>
@@ -32,12 +33,30 @@
             stream-url="{{selectiveStream}}"
             audio="{{hasAudio}}"
             video="{{hasVideo}}"
-            back-camera="{{usingRearCamera}}"
+            cameras="{{cameras}}"
+            mics="{{mics}}"
+            active-camera="{{activeCam}}"
+            active-mic="{{activeMic}}"
             manual></webrtc-stream>
         
         <label>I want audio!</label><input type="checkbox" checked="{{hasAudio::change}}"><br>
         <label>I want video!</label><input type="checkbox" checked="{{hasVideo::change}}"><br>
-        <label>I want the rear camera!</label><input type="checkbox" checked="{{usingRearCamera::change}}"><br>
+        <label>The camera I want is:</label>
+        <select value="{{activeCam::change}}">
+          <option value="">Select one</option>
+          <template is="dom-repeat" items="{{cameras}}" as="camera">
+            <option value$="{{camera}}">{{camera.label}}</option>
+          </template>
+        </select>
+        <br>
+        <label>The microphone I want is:</label>
+        <select value="{{activeMic::change}}">
+          <option value="">Select one</option>
+          <template is="dom-repeat" items="{{mics}}" as="mic">
+            <option value$="{{mic}}">{{mic.label}}</option>
+          </template>
+        </select>
+        <br>
         
         <p><strong>Note - it may play your audio so be sure to use headphones so that you don't get an endless screeching echo</strong></p>
         <p>Start the next stream by clicking here:  
