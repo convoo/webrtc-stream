@@ -207,8 +207,13 @@ Example:
         if(this.audio || this.video){
           
           if (hasGetUserMedia()) {
-            
+            console.log('BANG!');
             var audioSettings, videoSettings;
+            
+            console.log("this.activeMic");
+            console.log(this.activeMic);
+            console.log("this.activeCamera");
+            console.log(this.activeCamera);
             
             if(this.audio && this.activeMic != null && this.activeMic != ""){
               audioSettings = {
@@ -239,15 +244,31 @@ Example:
               video: videoSettings
             }
             
+            var constraints = {};
+            
+            constraints.video = {
+              optional: [{
+                sourceId: this.activeCamera
+              }]
+            };
+            
+            constraints.audio = {
+                optional: [{
+                    sourceId: this.activeMic
+                }]
+            };
+            
             console.log(settings)
             
             navigator.getUserMedia  = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
             navigator.getUserMedia(
               // Settings
-              settings,
+              constraints,
+              
               // Positive scenario
               function(stream) {
-                this.stream = stream
+                this.stream = stream;
+                console.log('BOOM!')
                 this.streamUrl = window.URL.createObjectURL(stream);
               }.bind(this),
               // Error scenario
